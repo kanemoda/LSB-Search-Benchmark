@@ -32,6 +32,7 @@ In the performance tests, an accumulated sum (declared as `volatile`) is used to
 
 ## Project Structure
 
+```
 comparison_project/
 ├── Makefile
 ├── include/
@@ -42,6 +43,7 @@ comparison_project/
     ├── debruijn.cpp
     ├── iterative.cpp
     └── main.cpp
+```
 
 ## How to Build and Run
 
