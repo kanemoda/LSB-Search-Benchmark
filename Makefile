@@ -4,33 +4,44 @@
 CXX       = g++
 CXXFLAGS  = -std=c++17 -O2 -Wall -Iinclude
 LDFLAGS   =
-TARGET    = LSB-Search-Benchmark
 
 # Directories
 SRCDIR    = src
 OBJDIR    = obj
 
-# Automatically find all source files and create corresponding object files.
-SOURCES   = $(wildcard $(SRCDIR)/*.cpp)
-OBJECTS   = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SOURCES))
+# Targets
+TARGET_SINGLE = LSB-Search-Benchmark-Single
+TARGET_MULTI  = LSB-Search-Benchmark-Multi
 
-.PHONY: all clean run
+# Source files
+SOURCES_COMMON = $(SRCDIR)/debruijn.cpp $(SRCDIR)/iterative.cpp $(SRCDIR)/intrinsics.cpp
+SOURCES_SINGLE = $(SRCDIR)/main_single.cpp
+SOURCES_MULTI  = $(SRCDIR)/main_multi.cpp
 
-# Default target: build the executable.
-all: $(TARGET)
+# Object files
+OBJECTS_COMMON = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SOURCES_COMMON))
+OBJECTS_SINGLE = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SOURCES_SINGLE))
+OBJECTS_MULTI  = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SOURCES_MULTI))
 
-$(TARGET): $(OBJECTS)
+.PHONY: all clean run-single run-multi
+
+all: $(TARGET_SINGLE) $(TARGET_MULTI)
+
+$(TARGET_SINGLE): $(OBJECTS_COMMON) $(OBJECTS_SINGLE)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
-# Compile source files to object files.
+$(TARGET_MULTI): $(OBJECTS_COMMON) $(OBJECTS_MULTI)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(OBJDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Run the executable.
-run: $(TARGET)
-	./$(TARGET)
+run-single: $(TARGET_SINGLE)
+	./$(TARGET_SINGLE)
 
-# Clean up build files.
+run-multi: $(TARGET_MULTI)
+	./$(TARGET_MULTI)
+
 clean:
-	rm -rf $(OBJDIR)/*.o $(TARGET)
+	rm -rf $(OBJDIR)/*.o $(TARGET_SINGLE) $(TARGET_MULTI)
