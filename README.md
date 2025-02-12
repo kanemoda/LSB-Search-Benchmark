@@ -49,4 +49,11 @@ comparison_project/
    Open a terminal in the project's root directory and run:
    ```bash
    make
-2.
+2. **Run the Tests:**
+   After building, execute the benchmark tests by running:
+   ```bash
+   make run
+3. **Clean Up Build Files:**
+   To remove the generated object files and the executable, run:
+   ```bash
+   make clean
